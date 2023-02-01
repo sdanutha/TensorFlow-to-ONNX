@@ -1,0 +1,11 @@
+# Environments
+.env/
+
+# Editor
+.vscode/
+
+# Compiled
+__pycache__/
+
+# Jupyter
+.ipynb_checkpoints/
