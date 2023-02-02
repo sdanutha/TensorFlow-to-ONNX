@@ -1,13 +1,16 @@
 
 # base images
-FROM python:3.7-slim
+FROM mcr.microsoft.com/azureml/onnxruntime
+
+# working directory
+WORKDIR /code
+
+# install packages
+COPY ./code/requirements.txt /code
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 # source code
 COPY ./code /code
-WORKDIR /code
-
-# install dependencies
-RUN pip install -r requirements.txt
 
 # run
 CMD [ "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000" ]
