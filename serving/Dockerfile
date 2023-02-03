@@ -1,16 +1,13 @@
 
-# base images
+# base
 FROM mcr.microsoft.com/azureml/onnxruntime
 
-# working directory
+# code
+COPY ./code /code
 WORKDIR /code
 
-# install packages
-COPY ./code/requirements.txt /code
+# packages
 RUN pip3 install --no-cache-dir -r requirements.txt
-
-# source code
-COPY ./code /code
 
 # run
 CMD [ "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000" ]

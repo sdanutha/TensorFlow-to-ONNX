@@ -16,10 +16,10 @@ import numpy as np
 
 from PIL import Image
 
+
 # Initial FastAPI
-app = FastAPI(
-    title = 'TensorFlow-to-ONNX-Serving'
-)
+app = FastAPI(title = 'TensorFlow-to-ONNX-Serving')
+
 
 # load model
 model = rt.InferenceSession(
@@ -30,29 +30,37 @@ model = rt.InferenceSession(
 with open('model/label.txt', 'r') as f:
     labels = f.read().split('\n')
 
-# Inference API
+
+# Information
+@app.get('/')
+async def information():
+    return { 'title': 'TensorFlow-to-ONNX-Serving' }
+
+# Inference
 @app.post('/inference', tags = ['Inference'])
 async def prediction(image: UploadFile = File(...)):
+    
+    # timestart
+    start = time.time()
     
     # set X
     x = await image.read()
     x = Image.open(io.BytesIO(x))
     
+    # prep X
     x = np.array(x, dtype = np.float32)
     x = np.expand_dims(x, axis = 0)
     x = np.divide(x, 255.0)
     
     try:
         
-        # get Y (Inference)
-        start = time.time()
+        # get Y
         y = model.run(['logits'], {'inputs': x})
-        end = time.time()
         
         # outputs
         outputs = {
             'prediction': labels[y[0].argmax()].upper(),
-            'time': (end - start) * 1000,
+            'time': (time.time() - start) * 1000,
             'error': ''
         }
     
@@ -61,5 +69,7 @@ async def prediction(image: UploadFile = File(...)):
         # outputs
         outputs = { 'prediction': 'UNLNOW', 'time': -1, 'error': str(e) }
     
-    # return
-    return JSONResponse(outputs)
+    finally:
+        
+        # return
+        return JSONResponse(outputs)
