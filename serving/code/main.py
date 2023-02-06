@@ -16,7 +16,6 @@ import numpy as np
 
 from PIL import Image
 
-
 # Initial FastAPI
 app = FastAPI(title = 'TensorFlow-to-ONNX-Serving')
 
