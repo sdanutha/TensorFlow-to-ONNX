@@ -22,7 +22,7 @@ app = FastAPI(title = 'TensorFlow-to-ONNX-Serving')
 
 # load model
 model = rt.InferenceSession(
-    'model/model.onnx', providers = ['CPUExecutionProvider', 'CUDAExecutionProvider']
+    'model/model.onnx', providers = ['CUDAExecutionProvider']
 )
 
 # load labels
