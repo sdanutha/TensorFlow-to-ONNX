@@ -47,6 +47,7 @@ async def prediction(image: UploadFile = File(...)):
     x = Image.open(io.BytesIO(x))
     
     # prep X
+    x = x.resize((224, 224))
     x = np.array(x, dtype = np.float32)
     x = np.expand_dims(x, axis = 0)
     x = np.divide(x, 255.0)
